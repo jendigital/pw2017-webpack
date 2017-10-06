@@ -1,4 +1,6 @@
+const CleanupPlugin = require('clean-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const HTMLPlugin = require('html-webpack-plugin')
 const merge = require('webpack-merge')
 const webpack = require('webpack')
 
@@ -85,6 +87,40 @@ exports.minifyJS = () => ({
   ],
 })
 
+// Cache optimization
+// ------------------
+
+exports.autoVendor = () => ({
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: ({ resource }) =>
+        resource &&
+        resource.includes('node_modules') &&
+        resource.endsWith('.js'),
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+      minChunks: +Infinity,
+    }),
+  ],
+})
+
+exports.cleanup = ({ path, exclude }) => ({
+  plugins: [new CleanupPlugin(path, { exclude })],
+})
+
+exports.hashFiles = () => ({
+  output: {
+    filename: '[name].[chunkhash:8].js',
+  },
+  plugins: [new webpack.NamedModulesPlugin()],
+})
+
+exports.htmlStub = () => ({
+  plugins: [new HTMLPlugin()],
+})
+
 // Fonctions d’assistance internes
 // -------------------------------
 
@@ -123,7 +159,7 @@ function extractStyling({ ext, name }) {
   cssPlugin =
     cssPlugin ||
     new ExtractTextPlugin({
-      filename: 'app.css',
+      filename: 'app.[contenthash:8].css',
       allChunks: true,
     })
 
