@@ -8,6 +8,10 @@ document.body.innerHTML = `
 
 require('./footer')
 
+if (process.env.NODE_ENV !== 'production') {
+  console.log('YOLO DEV')
+}
+
 if (module.hot) {
   module.hot.accept()
 }

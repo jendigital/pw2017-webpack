@@ -41,6 +41,7 @@ const prodConfig = () =>
     parts.extractCSS(),
     parts.extractSASS(),
     parts.extractStylus(),
+    parts.minifyAll(),
     {
       devtool: 'source-map',
     },
