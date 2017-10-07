@@ -7,20 +7,23 @@ const PATHS = {
   target: path.join(__dirname, 'build'),
 }
 
-const CORE_CONFIG = {
-  devServer: {
-    contentBase: PATHS.target,
-    hot: true,
-    overlay: true,
+const CORE_CONFIG = merge([
+  {
+    devServer: {
+      contentBase: PATHS.target,
+      hot: true,
+      overlay: true,
+    },
+    devtool: 'cheap-module-source-map',
+    entry: PATHS.app,
+    output: {
+      path: PATHS.target,
+      filename: 'bundle.js',
+      publicPath: '/',
+    },
   },
-  devtool: 'cheap-module-source-map',
-  entry: PATHS.app,
-  output: {
-    path: PATHS.target,
-    filename: 'bundle.js',
-    publicPath: '/',
-  },
-}
+  parts.loadImages(),
+])
 
 const devConfig = () =>
   merge([
